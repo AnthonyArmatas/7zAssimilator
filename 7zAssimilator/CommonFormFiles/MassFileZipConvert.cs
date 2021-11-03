@@ -19,15 +19,23 @@ namespace _7zAssimilator.CommonFormFiles
         public static bool Convert(string directoryLocation, string extractLocation)
         {
             string logLocation = Directory.GetCurrentDirectory() + @"\log.txt";
+            SevenZip.SevenZipExtractor.SetLibraryPath(Directory.GetCurrentDirectory() + @"\7z.dll");
+
+            SevenZip.SevenZipCompressor.SetLibraryPath(Directory.GetCurrentDirectory() + @"\7z.dll");
+
             try
             {
+
+
+
+
                 // From a directory walk through it and every sub directory
                 // Check to see if a file type is zip/rar/ect, if so extract file to selected drive (presumable one with a lot of space)
                 // Delete the original and Rezip it in 7z (the most compression I can find) back where it was found.
                 // if there is an issue write to a bug log the issue and delete the newly created files
 
                 //TODO: Make a log function that takes in a list of strings and writes to the given log path
-                
+
                 string[] directoryList = Directory.GetDirectories(directoryLocation);
 
                 using (StreamWriter w = File.AppendText(logLocation))
@@ -40,7 +48,7 @@ namespace _7zAssimilator.CommonFormFiles
                     w.WriteLine();
                 }
 
-                WorkThroughDirectories(directoryLocation, extractLocation, true, logLocation);
+                WorkThroughDirectories(directoryLocation, extractLocation + @"\", true, logLocation);
                 //foreach (string directory in directoryList)
                 //{
                 //    WorkThroughDirectories(directory, extractLocation, true, logLocation);
@@ -124,7 +132,7 @@ namespace _7zAssimilator.CommonFormFiles
 
                     using (ArchiveFile archiveFile = new ArchiveFile(location))
                     {
-                        using (StreamWriter w = File.AppendText(@"F:\Workshop\MassFileZipConvert\MassFileZipConvert\log.txt"))
+                        using (StreamWriter w = File.AppendText(LogLocation))
                         {
                             w.WriteLine("About to Extract: ");
                             w.WriteLine(location);
