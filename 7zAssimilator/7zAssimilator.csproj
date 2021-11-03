@@ -136,6 +136,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CommonFormFiles\MassFileZipConvert.cs" />
+    <Compile Include="Models\MassFileZipConvertModel.cs" />
     <Compile Include="ViewModels\ConverterViewModel.cs" />
     <Compile Include="Views\ConverterView.xaml.cs">
       <DependentUpon>ConverterView.xaml</DependentUpon>
@@ -177,9 +178,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>

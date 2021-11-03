@@ -1,4 +1,5 @@
-﻿using SevenZip;
+﻿using _7zAssimilator.Models;
+using SevenZip;
 using SevenZipExtractor;
 using System;
 using System.Collections.Generic;
@@ -12,12 +13,23 @@ namespace _7zAssimilator.CommonFormFiles
 {
     public static class MassFileZipConvert
     {
+        static MassFileZipConvertModel massFileZipConvertModel;
         static MassFileZipConvert()
         {
+            massFileZipConvertModel = new MassFileZipConvertModel()
+            {
+                CompressedCount = 0,
+                ErrorCount = 0,
+                Successful = false
+            };
         }
 
-        public static bool Convert(string directoryLocation, string extractLocation)
+        public static MassFileZipConvertModel Convert(string directoryLocation, string extractLocation)
         {
+            massFileZipConvertModel.CompressedCount = 0;
+            massFileZipConvertModel.ErrorCount = 0;
+            massFileZipConvertModel.Successful = false;
+
             string logLocation = Directory.GetCurrentDirectory() + @"\log.txt";
             SevenZip.SevenZipExtractor.SetLibraryPath(Directory.GetCurrentDirectory() + @"\7z.dll");
 
@@ -25,10 +37,6 @@ namespace _7zAssimilator.CommonFormFiles
 
             try
             {
-
-
-
-
                 // From a directory walk through it and every sub directory
                 // Check to see if a file type is zip/rar/ect, if so extract file to selected drive (presumable one with a lot of space)
                 // Delete the original and Rezip it in 7z (the most compression I can find) back where it was found.
@@ -59,7 +67,8 @@ namespace _7zAssimilator.CommonFormFiles
                     w.WriteLine("All done.");
                     w.WriteLine("/////////////////////////////////////");
                 }
-                return true;
+                massFileZipConvertModel.Successful = true;
+                return massFileZipConvertModel;
             }
             catch (Exception e)
             {
@@ -68,8 +77,10 @@ namespace _7zAssimilator.CommonFormFiles
                     w.WriteLine("Something Went Wrong.");
                     w.WriteLine("Error Message: " +  e.Message);
                     w.WriteLine("/////////////////////////////////////");
+                    massFileZipConvertModel.ErrorCount++;
                 }
-                return false;
+                massFileZipConvertModel.Successful = false;
+                return massFileZipConvertModel;
             }
             
         }
@@ -101,6 +112,7 @@ namespace _7zAssimilator.CommonFormFiles
                     w.WriteLine("EXCEPTION");
                     w.WriteLine(ex.Message);
                     w.WriteLine("/////////////////////////////////////");
+                    massFileZipConvertModel.ErrorCount++;
                 }
             }
 
@@ -166,6 +178,7 @@ namespace _7zAssimilator.CommonFormFiles
                     sevenZipCompressor.CompressDirectory(newExtractLocation, Path.GetDirectoryName(location) + @"\" + fileName + ".7z");
                     File.Delete(location);
                     Directory.Delete(newExtractLocation, true);
+                    massFileZipConvertModel.CompressedCount++;
 
                 }
             }
@@ -178,6 +191,7 @@ namespace _7zAssimilator.CommonFormFiles
                     w.WriteLine("EXCEPTION");
                     w.WriteLine(ex.Message);
                     w.WriteLine("/////////////////////////////////////");
+                    massFileZipConvertModel.ErrorCount++;
                 }
             }
 
